@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -16,7 +15,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 public class RentCalculation {
 
     @Id
-    private Integer id;
+    @Column(name="rentalid")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer rentalid;
 
     private String name;
 

@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Getter
@@ -14,7 +17,9 @@ import javax.persistence.Id;
 public class CustomerBill {
 
     @Id
-    private Integer id;
+    @Column(name="billid")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer billid;
 
     private String customerName;
 

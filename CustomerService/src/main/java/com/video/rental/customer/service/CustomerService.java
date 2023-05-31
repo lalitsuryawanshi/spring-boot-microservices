@@ -10,4 +10,8 @@ public interface CustomerService {
     public List<Customer> fetchAllCustomers();
 
     public Optional<Customer> findOneCustomer(Integer id);
+
+    public Customer addNewCustomer(Customer customer);
+
+    public void deleteCustomer(Integer cusomerId);
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -25,5 +25,16 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> findOneCustomer(Integer id) {
         return customerRepository.findById(id);
+    }
+
+    @Override
+    public Customer addNewCustomer(Customer customer) {
+        Customer saved = customerRepository.save(customer);
+        return saved;
+    }
+
+    @Override
+    public void deleteCustomer(Integer customerId) {
+        customerRepository.deleteById(customerId);
     }
 }
