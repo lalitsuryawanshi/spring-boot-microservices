@@ -1,8 +1,7 @@
 package com.video.calculator.proxy;
 
-import com.video.calculator.model.CustomerBill;
+import com.video.calculator.model.Videodisk;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -10,6 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface VideodiskServiceProxy {
 
     @GetMapping("/videodisks/{id}")
-    public CustomerBill fetchOneVideodisk(@PathVariable String id);
+    public Videodisk fetchOneVideodisk(@PathVariable String id);
 
 }

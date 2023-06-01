@@ -1,6 +1,6 @@
 package com.video.calculator.controller;
 
-import com.video.calculator.model.RentCalculation;
+import com.video.calculator.model.CustomerBill;
 import com.video.calculator.service.RentCalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,18 +20,13 @@ public class CalculatorController {
         this.rentCalculatorService = rentCalculatorService;
     }
 
-    @GetMapping("/bills")
-    public ResponseEntity<List<RentCalculation>> fetchAllRentCalculations(){
-        return ResponseEntity.ok(rentCalculatorService.fetchAllRentCalculations());
-    }
+    @GetMapping("/customer-bill/customer/{customerId}/movie/{movieId}/days/{numberOfDays}")
+    public ResponseEntity calculateCustomerBill( @PathVariable String customerId,
+                                                 @PathVariable String movieId,
+                                                 @PathVariable String numberOfDays) {
 
-    @GetMapping("/bills/{customerId}")
-    public ResponseEntity<RentCalculation> fetchOneRentCalculation(@PathVariable String customerId){
-        Optional<RentCalculation> rent = rentCalculatorService.findOneRentCalculation(Integer.valueOf(customerId));
-        if (rent.isPresent()) {
-            return ResponseEntity.ok(rentCalculatorService.findOneRentCalculation(Integer.valueOf(customerId)).get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<CustomerBill> customerBill = rentCalculatorService.calculateCustomerRent(customerId, movieId, numberOfDays);
+
+        return customerBill.map(bill -> ResponseEntity.ok().body(bill)).orElseGet(() -> (ResponseEntity) ResponseEntity.notFound());
     }
 }

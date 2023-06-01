@@ -1,6 +1,6 @@
 package com.video.calculator.proxy;
 
-import com.video.calculator.model.CustomerBill;
+import com.video.calculator.model.Customer;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface CustomerServiceProxy {
 
     @GetMapping("/customers/{customerId}")
-    public CustomerBill findOneCustomer(@PathVariable Integer customerId );
+    public Customer findOneCustomer(@PathVariable String customerId);
 }

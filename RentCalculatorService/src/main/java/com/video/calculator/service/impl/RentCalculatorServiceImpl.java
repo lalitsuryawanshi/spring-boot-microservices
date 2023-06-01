@@ -1,34 +1,49 @@
 package com.video.calculator.service.impl;
 
-import com.video.calculator.model.RentCalculation;
-import com.video.calculator.repository.CalculatorRepository;
+import com.video.calculator.model.Customer;
+import com.video.calculator.model.CustomerBill;
+import com.video.calculator.model.Videodisk;
+import com.video.calculator.proxy.CustomerServiceProxy;
+import com.video.calculator.proxy.VideodiskServiceProxy;
 import com.video.calculator.service.RentCalculatorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class RentCalculatorServiceImpl implements RentCalculatorService {
 
-    @Autowired
-    private final CalculatorRepository calculatorRepository;
+    private final CustomerServiceProxy customerProxy;
 
-    public RentCalculatorServiceImpl(CalculatorRepository calculatorRepository) {
-        this.calculatorRepository = calculatorRepository;
+    private final VideodiskServiceProxy movieProxy;
+
+    public RentCalculatorServiceImpl(CustomerServiceProxy customerProxy, VideodiskServiceProxy movieProxy) {
+        this.customerProxy = customerProxy;
+        this.movieProxy = movieProxy;
     }
 
-    @Override
-    public List<RentCalculation> fetchAllRentCalculations() {
 
-        return calculatorRepository.findAll();
+    public Optional<CustomerBill> calculateCustomerRent(String customerId, String movieId, String numberOfDays) {
+
+        try {
+            Customer customer = customerProxy.findOneCustomer(customerId);
+            Videodisk movie = movieProxy.fetchOneVideodisk(movieId);
+
+            CustomerBill customerBill = new CustomerBill();
+            customerBill.setCustomerName(customer.getUsername());
+            customerBill.setMovieName(movie.getName());
+            customerBill.setRentPerDay(movie.getRentPerDay());
+            customerBill.setRentDays(Integer.valueOf(numberOfDays));
+
+            double totalBill = Integer.parseInt(numberOfDays) * movie.getRentPerDay();
+            customerBill.setTotalBill(totalBill);
+
+            return Optional.of(customerBill);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return Optional.empty();
     }
-
-    @Override
-    public Optional<RentCalculation> findOneRentCalculation(Integer id) {
-        return calculatorRepository.findById(id);
-    }
-
 
 }

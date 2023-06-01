@@ -2,7 +2,6 @@ package com.video.rental.customer.controller;
 
 import com.video.rental.customer.model.Customer;
 import com.video.rental.customer.service.CustomerService;
-import feign.Body;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
