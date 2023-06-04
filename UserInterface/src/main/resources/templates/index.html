@@ -5,47 +5,141 @@
     <script src="/webjars/bootstrap/5.2.3/js/bootstrap.min.js"></script>
     <script src="/webjars/jquery/3.6.4/jquery.min.js"></script>
     <link rel="stylesheet"
-          href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
+          href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta&display=swap" rel="stylesheet">
+    <style>
+    body {
+        font-family: 'Mukta', sans-serif;
+    }
+     input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        .selected-row {
+            background-color: #FFF9E3;
+        }
+
+        .hover-table {
+            margin-bottom: 20px;
+        }
+
+        .hover-table td:hover {
+            background-color: lightblue;
+        }
+
+
+    </style>
 </head>
 <body>
-    <div class="container"><br/>
-        <h1>Customers</h1>
-        <div class="table-responsive" th:if="${not #lists.isEmpty(customers)}">
-            <table class="table table-hover ">
-                <thead class="thead-inverse">
-                <tr>
-                    <th>Customer ID</th>
-                    <th>User Name</th>
-                    <th>Address</th>
-                </tr>
-                </thead>
-                <tr th:each="customer : ${customers}">
-                    <td th:text="${customer.customerid}">123</td>
-                    <td th:text="${customer.username}">User Name 1</td>
-                    <td th:text="${customer.address}">Address 1</td>
-                </tr>
-            </table>
-        </div>
-        <h1>Video Disks</h1>
-        <div class="table-responsive" th:if="${not #lists.isEmpty(videos)}">
-            <table class="table table-hover ">
-                <thead class="thead-inverse">
-                <tr>
-                    <th>Video ID</th>
-                    <th>Name</th>
-                    <th>Genre</th>
-                    <th>Rent/Day</th>
-                </tr>
-                </thead>
-                <tr th:each="video : ${videos}">
-                    <td th:text="${video.videoid}">123</td>
-                    <td th:text="${video.name}">Name 1</td>
-                    <td th:text="${video.genre}">Genre 1</td>
-                    <td th:text="${video.rentPerDay}">Rent/Day 1</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+<div class="container">
+    <div class="row"> <!-- Row Starts -->
+        <div class="col"> <!-- Column 1 Starts -->
+            <h1>Customers</h1>
+            <input type="text" id="searchCustomerInput" class="form-control" placeholder="Search customer..."/>
+            <div id="selectedCustomer"></div>
+            <div class="table-responsive" th:if="${not #lists.isEmpty(customers)}">
+                <table id="customerTable" class="table table-hover">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>User Name</th>
+                        <th>Address</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="customer : ${customers}">
+                        <td class="align-middle" th:text="${customer.customerid}">123</td>
+                        <td class="align-middle" th:text="${customer.username}">User Name 1</td>
+                        <td class="align-middle" th:text="${customer.address}">Address 1</td>
+                        <td class="align-middle">
+                            <button class="btn btn-primary select-button">Select</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div> <!-- Table div ends -->
+        </div> <!-- Column 1 Ends -->
+        <div class="col"> <!-- Column 2 Starts -->
+            <h1>Video Disks</h1>
+            <input type="text" id="searchVideoInput" class="form-control" placeholder="Search videos..."/>
+            <div id="selectedVideo"></div>
+            <div class="table-responsive" th:if="${not #lists.isEmpty(videos)}">
+                <table id="videoTable" class="table table-hover ">
+                    <thead class="thead-inverse">
+                    <tr>
+                        <th>Video ID</th>
+                        <th>Name</th>
+                        <th>Genre</th>
+                        <th>Rent/Day</th>
+                        <th>Select</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="video : ${videos}">
+                        <td class="align-middle" th:text="${video.videoid}">123</td>
+                        <td class="align-middle" th:text="${video.name}">Name 1</td>
+                        <td class="align-middle" th:text="${video.genre}">Genre 1</td>
+                        <td class="align-middle" th:text="${video.rentPerDay}">Rent/Day 1</td>
+                        <td>
+                            <button class="btn btn-primary select-button">Select</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div> <!-- Table div ends -->
+        </div> <!-- Column 2 Ends -->
+    </div> <!-- Row Ends -->
+</div> <!-- container ends -->
+<script>
+            $(document).ready(function() {
+                $("#searchCustomerInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#customerTable tbody tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+
+                $("#customerTable").on("click", ".select-button", function() {
+                    var selectedRow = $(this).closest("tr");
+                    selectedRow.addClass("selected-row");
+                    selectedRow.siblings().removeClass("selected-row");
+
+                    var rowData = selectedRow.find("td").map(function() {
+                        return $(this).text();
+                    }).get();
+
+                    $("#selectedCustomer").html("Selected Customer: " + rowData.join(" | "));
+                });
+            });
+
+            $(document).ready(function() {
+                $("#searchVideoInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#videoTable tbody tr").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+
+                $("#videoTable").on("click", ".select-button", function() {
+                    var selectedRow = $(this).closest("tr");
+                    selectedRow.addClass("selected-row");
+                    selectedRow.siblings().removeClass("selected-row");
+
+                    var rowData = selectedRow.find("td").map(function() {
+                        return $(this).text();
+                    }).get();
+
+                    $("#selectedVideo").html("Selected Video: " + rowData.join(" | "));
+                });
+            });
+
+</script>
 </body>
 
 </html>
